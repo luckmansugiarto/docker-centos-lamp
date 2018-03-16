@@ -1,0 +1,7 @@
+version: '3'
+
+services:
+  centos:
+    build: ./centos
+    container_name: qusol_centos_container
+    image: qusol_centos:v6
