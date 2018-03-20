@@ -1,12 +1,27 @@
 version: '3'
 
 services:
-  centos:
+  os:
     build: ./centos
-    container_name: mycentos
+    container_name: centos
     image: centos:v6
     tty: true    
-  mariadb:
+  webserver:
+    build: 
+      context: ./apache_php
+      args:
+        user: app      
+    container_name: php_apache
+    depends_on:
+      - "os"
+    image: php53_apache22
+    tty: true
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - "/c/localhost/webapps:/var/html/app/public_html" #make sure the variable name "app" after /html is the same as the build args "user"  
+  database:
     build: 
       context: ./mariadb      
       args:
@@ -14,7 +29,7 @@ services:
         mysqld_group: mysql
     container_name: mariadb
     depends_on: 
-      - "centos"
+      - "webserver"
     environment:  
       MYSQL_ROOT_PASSWORD: "my-root-pw"
       MYSQL_USER: "mysql"
@@ -25,17 +40,15 @@ services:
     #restart: always
     tty: true
     volumes:
-      - "/c/localhost/qusol/mysql-data:/var/lib/mysql"   
-  phpmyadmin:
+      - "/c/localhost/dbdata:/var/lib/mysql"   
+  database_gui:
     container_name: phpmyadmin
-    image: phpmyadmin/phpmyadmin #corbinu/docker-phpmyadmin   
+    image: phpmyadmin/phpmyadmin
     depends_on:
-      - "mariadb"
+      - "database"
     environment:      
       MYSQL_USERNAME: "root"
       MYSQL_ROOT_PASSWORD: "my-root-pw"
     ports:
-      - "8080:80" #make sure that container's port is correct (in this case is 80), otherwise running localhost:8080 on browser won't show up anything.
-    #apache_php:
-    #  build: ./apache_php
-    #  container_name: 
+      - "8080:80" #make sure that container's port is correct (in this case is 80 - as defined by the EXPOSE keyword in the Dockerfile of phpmyadmin), otherwise running localhost:8080 on browser won't show up anything.
+  
