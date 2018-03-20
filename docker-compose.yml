@@ -3,5 +3,29 @@ version: '3'
 services:
   centos:
     build: ./centos
-    container_name: qusol_centos_container
-    image: qusol_centos:v6
+    container_name: mycentos
+    image: centos:v6
+    tty: true    
+  mariadb:
+    build: 
+      context: ./mariadb      
+      args:
+        mysqld_user: mysql
+        mysqld_group: mysql
+    container_name: mariadb
+    depends_on: 
+      - "centos"
+    environment:  
+      MYSQL_ROOT_PASSWORD: "my-root-pw"
+      MYSQL_USER: "mysql"
+      MYSQL_PASSWORD: "mysql"
+    image: mariadb:v55
+    ports:
+      - "3306"        
+    #restart: always
+    tty: true
+    volumes:
+      - "/c/localhost/qusol/mysql-data:/var/lib/mysql"    
+  #apache_php:
+  #  build: ./apache_php
+  #  container_name: 
