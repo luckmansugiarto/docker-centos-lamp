@@ -2,6 +2,7 @@ FROM centos:v6
 
 ARG uid=1000
 ARG user
+ARG server_name
 
 # -----------------------------------------------------------------------------
 # Apache + PHP
@@ -26,6 +27,16 @@ RUN yum -y update \
 	&& rm -rf /var/cache/yum/* \
 	yum clean all
 
+# -----------------------------------------------------------------------------
+# Add default service users
+# -----------------------------------------------------------------------------
+RUN useradd -u ${uid} -d /var/www/$user -m $user \
+	&& usermod -a -G $user apache
+
+# -----------------------------------------------------------------------------
+# Create the initial directory structure
+# -----------------------------------------------------------------------------
+RUN mkdir -p /var/www/$user/{public_html,var/{log,session}}
 
 # -----------------------------------------------------------------------------
 # Global Apache configuration changes
@@ -40,11 +51,13 @@ RUN sed -i \
 	-e 's~^ServerTokens OS$~ServerTokens Prod~g' \
 	-e 's~^DirectoryIndex \(.*\)$~DirectoryIndex index.php \1~g' \
 	-e 's~^Group apache$~Group app~g' \
+	-e "s/^#ServerName \(.*\)/ServerName ${server_name}/g" \
 	-e 's~^IndexOptions \(.*\)$~#IndexOptions \1~g' \
 	-e 's~^IndexIgnore \(.*\)$~#IndexIgnore \1~g' \
 	-e 's~^AddIconByEncoding \(.*\)$~#AddIconByEncoding \1~g' \
 	-e 's~^AddIconByType \(.*\)$~#AddIconByType \1~g' \
 	-e 's~^AddIcon \(.*\)$~#AddIcon \1~g' \
+	-e "s/^DocumentRoot \(.*\)/DocumentRoot \/var\/www\/${user}\/public_html/g" \
 	-e 's~^DefaultIcon \(.*\)$~#DefaultIcon \1~g' \
 	-e 's~^ReadmeName \(.*\)$~#ReadmeName \1~g' \
 	-e 's~^HeaderName \(.*\)$~#HeaderName \1~g' \
@@ -104,21 +117,10 @@ RUN sed -i \
 	/etc/php.ini
 
 # -----------------------------------------------------------------------------
-# Add default service users
-# -----------------------------------------------------------------------------
-RUN useradd -u ${uid} -d /var/www/$user -m $user \
-	&& usermod -a -G $user apache
-
-# -----------------------------------------------------------------------------
-# Create the initial directory structure
-# -----------------------------------------------------------------------------
-RUN mkdir -p /var/www/$user/{public_html,var/{log,session}}
-
-# -----------------------------------------------------------------------------
 # Virtual hosts configuration
 # -----------------------------------------------------------------------------
-COPY ./config/httpd-vhosts.conf /etc/httpd/conf.d
-RUN sed -i "s/{{user}}/${user}/g" /etc/httpd/conf.d/httpd-vhosts.conf
+#COPY ./config/httpd-vhosts.conf /etc/httpd/conf.d
+#RUN sed -i "s/{{user}}/${user}/g" /etc/httpd/conf.d/httpd-vhosts.conf
 
 # -----------------------------------------------------------------------------
 # Set permissions
@@ -163,10 +165,5 @@ ENV DB_MYSQL_PORT_3306_TCP_PORT ""
 # Set ports
 # -----------------------------------------------------------------------------
 EXPOSE 80 443
-
-# -----------------------------------------------------------------------------
-# Copy files into place
-# -----------------------------------------------------------------------------
-COPY index.php /var/www/$user/public_html/index.php
 
 CMD ["/usr/sbin/httpd", "-DFOREGROUND"]

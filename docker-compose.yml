@@ -10,7 +10,8 @@ services:
     build: 
       context: ./apache_php
       args:
-        user: app      
+        user: app
+        server_name: localhost
     container_name: php_apache
     depends_on:
       - "os"
@@ -20,7 +21,8 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - "/c/localhost/webapps:/var/html/app/public_html" #make sure the variable name "app" after /html is the same as the build args "user"  
+      - "/c/localhost/orchestration/_config/apache/httpd-vhosts.conf:/etc/httpd/conf.d/httpd-vhosts.conf"  #sync apache config with that in the container
+      - "/c/localhost/webapps:/var/www/app/public_html"                 #make sure the variable name "app" after /html is the same as the build args "user"  
   database:
     build: 
       context: ./mariadb      
