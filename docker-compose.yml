@@ -25,7 +25,17 @@ services:
     #restart: always
     tty: true
     volumes:
-      - "/c/localhost/qusol/mysql-data:/var/lib/mysql"    
-  #apache_php:
-  #  build: ./apache_php
-  #  container_name: 
+      - "/c/localhost/qusol/mysql-data:/var/lib/mysql"   
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin #corbinu/docker-phpmyadmin   
+    depends_on:
+      - "mariadb"
+    environment:      
+      MYSQL_USERNAME: "root"
+      MYSQL_ROOT_PASSWORD: "my-root-pw"
+    ports:
+      - "8080:80" #make sure that container's port is correct (in this case is 80), otherwise running localhost:8080 on browser won't show up anything.
+    #apache_php:
+    #  build: ./apache_php
+    #  container_name: 
