@@ -15,7 +15,7 @@ services:
     container_name: phpapache_webserver
     depends_on:
       - "os"
-    image: apache22
+    image: php55_apache22
     tty: true
     ports:
       - 80:80

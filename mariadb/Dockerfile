@@ -42,7 +42,7 @@ RUN sed -i \
 	yum clean all
 
 RUN yum -y update && \
-	yum -y install MariaDB-server
+	yum -y install MariaDB
 
 RUN \
 	rm -rf ${MYSQL_BASE_INCL} && \

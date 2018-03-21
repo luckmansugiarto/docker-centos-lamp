@@ -96,28 +96,28 @@ RUN sed -i \
 # Global PHP configuration changes
 # -----------------------------------------------------------------------------
 RUN sed -i \
-	-e 's~^;date.timezone =$~date.timezone = UTC~g' \
-	-e 's~^;user_ini.filename =$~user_ini.filename =~g' \
-	-e 's~^;always_populate_raw_post_data = -1$~always_populate_raw_post_data = -1~g' \
-	-e 's~^;user_ini.filename =$~user_ini.filename =~g' \
-	-e 's~^register_globals =$~register_globals = On~g' \
-	-e 's~^short_open_tag =$~short_open_tag = On~g' \
-	-e 's~^memory_limit =$~memory_limit = 256M~g' \
-	-e 's~^display_startup_errors =$~display_startup_errors = On~g' \
-	-e 's~^register_argc_argv =$~register_argc_argv = On~g' \
-	-e 's~^upload_max_filesize =$~upload_max_filesize = 512M~g' \
-	-e 's~^\(extension .*\)$~;\1~g' \
-	-e 's~^;extension=php_bz2.dll~extension=php_bz2.dll~g' \
-	-e 's~^;extension=php_curl.dll~extension=php_curl.dll~g' \
-	-e 's~^;extension=php_gd2.dll~extension=php_gd2.dll~g' \
-	-e 's~^;extension=php_gettext.dll~extension=php_gettext.dll~g' \
-	-e 's~^;extension=php_mbstring.dll~extension=php_mbstring.dll~g' \
-	-e 's~^;extension=php_mysql.dll~extension=php_mysql.dll~g' \
-	-e 's~^;extension=php_mysqli.dll~extension=php_mysqli.dll~g' \
-	-e 's~^;extension=php_openssl.dll~extension=php_openssl.dll~g' \
-	-e 's~^;extension=php_pdo_mysql.dll~extension=php_pdo_mysql.dll~g' \
-	-e 's~^;extension=php_soap.dll~extension=php_soap.dll~g' \
-	-e 's~^;extension=php_xmlrpc.dll~extension=php_xmlrpc.dll~g' \
+	-e '/^;date.timezone =/cdate.timezone = UTC' \
+	-e '/^;user_ini.filename =/cuser_ini.filename =' \
+	-e '/^;always_populate_raw_post_data = -1/calways_populate_raw_post_data = -1' \
+	-e '/^;user_ini.filename =/cuser_ini.filename =' \
+	-e '/^register_globals =/cregister_globals = On' \
+	-e '/^short_open_tag =/cshort_open_tag = On' \
+	-e '/^memory_limit =/cmemory_limit = 256M' \
+	-e '/^display_startup_errors =/cdisplay_startup_errors = On' \
+	-e '/^register_argc_argv =/cregister_argc_argv = On' \
+	-e '/^upload_max_filesize =/cupload_max_filesize = 512M' \
+	-e '/^\(extension .*\)/c;\1' \
+	-e '/^;extension=php_bz2.dll/cextension=php_bz2.dll' \
+	-e '/^;extension=php_curl.dll/cextension=php_curl.dll' \
+	-e '/^;extension=php_gd2.dll/cextension=php_gd2.dll' \
+	-e '/^;extension=php_gettext.dll/cextension=php_gettext.dll' \
+	-e '/^;extension=php_mbstring.dll/cextension=php_mbstring.dll' \
+	-e '/^;extension=php_mysql.dll/cextension=php_mysql.dll' \
+	-e '/^;extension=php_mysqli.dll/cextension=php_mysqli.dll' \
+	-e '/^;extension=php_openssl.dll/cextension=php_openssl.dll' \
+	-e '/^;extension=php_pdo_mysql.dll/cextension=php_pdo_mysql.dll' \
+	-e '/^;extension=php_soap.dll/cextension=php_soap.dll' \
+	-e '/^;extension=php_xmlrpc.dll/cextension=php_xmlrpc.dll' \
 	/etc/php.ini
 
 # -----------------------------------------------------------------------------
