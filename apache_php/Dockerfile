@@ -78,6 +78,10 @@ RUN sed -i \
 	-e 's~^#LoadModule deflate_module ~LoadModule deflate_module ~g' \
 	-e 's~^#LoadModule headers_module ~LoadModule headers_module ~g' \
 	-e 's~^#LoadModule alias_module ~LoadModule alias_module ~g' \
+	-e 's~^#LoadModule proxy_module ~LoadModule proxy_module ~g' \
+	-e 's~^#LoadModule proxy_balancer ~LoadModule proxy_balancer ~g' \
+	-e 's~^#LoadModule proxy_http_module ~LoadModule proxy_http_module ~g' \
+	#-e '/LoadModule .*mod_speling.so/aLoadModule ssl_module modules/mod_ssl.so' \
 	-e '/#<Location \/server-status>/,/#<\/Location>/ s~^#~~' \
 	-e '/<Location \/server-status>/,/<\/Location>/ s~Allow from .example.com~Allow from localhost 127.0.0.1~' \
 	-e 's~^StartServers \(.*\)$~StartServers 3~g' \
@@ -115,12 +119,6 @@ RUN sed -i \
 	-e 's~^;extension=php_soap.dll~extension=php_soap.dll~g' \
 	-e 's~^;extension=php_xmlrpc.dll~extension=php_xmlrpc.dll~g' \
 	/etc/php.ini
-
-# -----------------------------------------------------------------------------
-# Virtual hosts configuration
-# -----------------------------------------------------------------------------
-#COPY ./config/httpd-vhosts.conf /etc/httpd/conf.d
-#RUN sed -i "s/{{user}}/${user}/g" /etc/httpd/conf.d/httpd-vhosts.conf
 
 # -----------------------------------------------------------------------------
 # Set permissions
