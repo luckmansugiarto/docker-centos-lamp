@@ -4,7 +4,7 @@ services:
   os:
     build: ./centos
     container_name: centos
-    image: centos:v6
+    image: luckmanqusol/local-dev:centos_6
     tty: true  
   webserver:
     build: 
@@ -15,7 +15,7 @@ services:
     container_name: phpapache_webserver
     depends_on:
       - "os"
-    image: php55_apache22
+    image: luckmanqusol/local-dev:php5-3_apache2-2
     tty: true
     ports:
       - 80:80
@@ -40,7 +40,7 @@ services:
       MYSQL_ROOT_PASSWORD: "my-root-pw"
       MYSQL_USER: "mysql"
       MYSQL_PASSWORD: "mysql"
-    image: mariadb:v55
+    image: luckmanqusol/local-dev:mariadb_5-5-59
     ports:
       - "3306"        
     #restart: always
