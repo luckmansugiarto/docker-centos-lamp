@@ -1,0 +1,61 @@
+version: '3'
+
+services:
+  os:
+    build: ./centos
+    container_name: centos
+    image: centos:v6
+    tty: true  
+  webserver:
+    build: 
+      context: ./apache_php
+      args:
+        user: app
+        server_name: localhost
+    container_name: phpapache_webserver
+    depends_on:
+      - "os"
+    image: php55_apache22
+    tty: true
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      # by default, DocumentRoot is set to /var/www/{user}/public_html. for current release, this is not modifiable.
+      - "/c/localhost/orchestration/_config/apache/tls/private:/etc/pki/tls/private"  # store ssl certificates
+      - "/c/localhost/orchestration/_config/apache/tls/certs:/etc/pki/tls/certs"  # store ssl certificates
+      - "/c/localhost/orchestration/_config/apache/ssl.conf:/etc/httpd/conf.d/ssl.conf"  # sync apache https / ssl config with that in the container
+      - "/c/localhost/orchestration/_config/apache/httpd-vhosts.conf:/etc/httpd/conf.d/httpd-vhosts.conf"  # sync apache config with that in the container
+      - "/c/localhost/webapps:/var/www/app/public_html"                 # make sure the variable name "app" after /html is the same as the build args "user"
+  database:
+    build: 
+      context: ./mariadb      
+      args:
+        mysqld_user: mysql
+        mysqld_group: mysql
+    container_name: mariadb
+    depends_on: 
+      - "webserver"
+    environment:  
+      MYSQL_ROOT_PASSWORD: "my-root-pw"
+      MYSQL_USER: "mysql"
+      MYSQL_PASSWORD: "mysql"
+    image: mariadb:v55
+    ports:
+      - "3306"        
+    #restart: always
+    tty: true
+    volumes:
+      - "/c/localhost/orchestration/_db:/mnt/db"  # Synching sql export / import files between host and container
+      - "/c/localhost/dbdata:/var/lib/mysql"      # Persist the database of the container to the host
+  database_gui:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+      - "database"
+    environment:      
+      PMA_HOST: "mariadb" # The container name of the database host that this PhpMyAdmin is going to connect to
+      PMA_PORT: 3306      # The exposed port of the database container that this PhpMyAdmin needs to connect to
+      MYSQL_ROOT_PASSWORD: "my-root-pw"
+    ports:
+      - "8080:80" #make sure that container's port is correct (in this case is 80 - as defined by the EXPOSE keyword in the Dockerfile of phpmyadmin), otherwise running localhost:8080 on browser won't show up anything. 
