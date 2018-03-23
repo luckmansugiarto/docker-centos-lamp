@@ -26,7 +26,7 @@ services:
       - "/c/localhost/orchestration/_config/apache/tls/certs:/etc/pki/tls/certs"  # store ssl certificates
       - "/c/localhost/orchestration/_config/apache/ssl.conf:/etc/httpd/conf.d/ssl.conf"  # sync apache https / ssl config with that in the container
       - "/c/localhost/orchestration/_config/apache/httpd-vhosts.conf:/etc/httpd/conf.d/httpd-vhosts.conf"  # sync apache config with that in the container
-      - "/c/localhost/webapps:/var/www/app/public_html"                 # make sure the variable name "app" after /html is the same as the build args "user"  
+      - "/c/localhost/webapps:/var/www/app/public_html"                 # make sure the variable name "app" after /html is the same as the build args "user"
   database:
     build: 
       context: ./mariadb      
