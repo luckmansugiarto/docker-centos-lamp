@@ -1,4 +1,4 @@
-FROM centos:v6
+FROM luckmanqusol/local-dev:centos_6
 
 ARG uid=1000
 ARG user
