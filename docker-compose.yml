@@ -16,10 +16,11 @@ services:
       - 443:443
     volumes:
       # by default, DocumentRoot is set to /var/www/{user}/public_html. for current release, this is not modifiable.
-      - "/c/localhost/orchestration/_config/apache/tls/private:/etc/pki/tls/private"  # store ssl certificates
-      - "/c/localhost/orchestration/_config/apache/tls/certs:/etc/pki/tls/certs"  # store ssl certificates
-      - "/c/localhost/orchestration/_config/apache/ssl.conf:/etc/httpd/conf.d/ssl.conf"  # sync apache https / ssl config with that in the container
-      - "/c/localhost/orchestration/_config/apache/httpd-vhosts.conf:/etc/httpd/conf.d/httpd-vhosts.conf"  # sync apache config with that in the container
+      - "/c/localhost/orchestration/docker/dist/config/apache/tls/private:/etc/pki/tls/private"  # store ssl certificates
+      - "/c/localhost/orchestration/docker/dist/config/apache/tls/certs:/etc/pki/tls/certs"  # store ssl certificates
+      - "/c/localhost/orchestration/docker/dist/config/apache/httpd.conf:/etc/httpd/conf/httpd.conf"  # sync apache https / ssl config with that in the container
+      - "/c/localhost/orchestration/docker/dist/config/apache/ssl.conf:/etc/httpd/conf.d/ssl.conf"  # sync apache https / ssl config with that in the container
+      - "/c/localhost/orchestration/docker/dist/config/apache/httpd-vhosts.conf:/etc/httpd/conf.d/httpd-vhosts.conf"  # sync apache config with that in the container
       - "/c/localhost/webapps:/var/www/app/public_html"                 # make sure the variable name "app" after /html is the same as the build args "user"
   database:
     container_name: mariadb
@@ -35,7 +36,7 @@ services:
     #restart: always
     tty: true
     volumes:
-      - "/c/localhost/orchestration/_db:/mnt/db"  # Synching sql export / import files between host and container
+      - "/c/localhost/orchestration/docker/dist/dbdump:/mnt/db"  # Synching sql export / import files between host and container
       - "/c/localhost/dbdata:/var/lib/mysql"      # Persist the database of the container to the host
   database_gui:
     container_name: phpmyadmin
