@@ -4,7 +4,7 @@ services:
   os:
     build: ./centos
     container_name: centos
-    image: centos:v6
+    image: 509566356991.dkr.ecr.ap-southeast-2.amazonaws.com/centos_6:latest #luckmanqusol/local-dev:centos_6
     tty: true  
   webserver:
     build: 
@@ -15,7 +15,7 @@ services:
     container_name: phpapache_webserver
     depends_on:
       - "os"
-    image: php55_apache22
+    image: 509566356991.dkr.ecr.ap-southeast-2.amazonaws.com/php5-3_apache2-2:latest
     tty: true
     ports:
       - 80:80
@@ -40,7 +40,7 @@ services:
       MYSQL_ROOT_PASSWORD: "my-root-pw"
       MYSQL_USER: "mysql"
       MYSQL_PASSWORD: "mysql"
-    image: mariadb:v55
+    image: 509566356991.dkr.ecr.ap-southeast-2.amazonaws.com/mariadb_5-5-59:latest
     ports:
       - "3306"        
     #restart: always
