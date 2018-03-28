@@ -31,7 +31,7 @@ RUN yum -y update \
 # Add default service users
 # -----------------------------------------------------------------------------
 RUN useradd -u ${uid} -d /var/www/$user -m $user \
-	&& usermod -a -G $user apache
+	&& usermod -a -G $user $user
 
 # -----------------------------------------------------------------------------
 # Create the initial directory structure
@@ -50,7 +50,8 @@ RUN sed -i \
 	-e 's~^ServerSignature On$~ServerSignature Off~g' \
 	-e 's~^ServerTokens OS$~ServerTokens Prod~g' \
 	-e 's~^DirectoryIndex \(.*\)$~DirectoryIndex index.php \1~g' \
-	-e 's~^Group apache$~Group app~g' \
+	-e 's~^User apache$~User ${user}~g' \
+	-e 's~^Group apache$~Group ${user}~g' \
 	-e "s/^#ServerName \(.*\)/ServerName ${server_name}/g" \
 	-e 's~^IndexOptions \(.*\)$~#IndexOptions \1~g' \
 	-e 's~^IndexIgnore \(.*\)$~#IndexIgnore \1~g' \

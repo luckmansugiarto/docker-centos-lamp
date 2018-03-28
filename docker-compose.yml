@@ -2,10 +2,16 @@ version: '3'
 
 services:
   os:
+    build: ./centos
     container_name: centos
     image: 509566356991.dkr.ecr.ap-southeast-2.amazonaws.com/centos_6:latest #luckmanqusol/local-dev:centos_6
     tty: true  
   webserver:
+    build:
+      context: ./apache_php
+      args:
+        user: app
+        server_name: localhost
     container_name: phpapache_webserver
     depends_on:
       - "os"
@@ -23,6 +29,11 @@ services:
       - "/c/localhost/orchestration/docker/dist/config/apache/httpd-vhosts.conf:/etc/httpd/conf.d/httpd-vhosts.conf"  # sync apache config with that in the container
       - "/c/localhost/webapps:/var/www/app/public_html"                 # make sure the variable name "app" after /html is the same as the build args "user"
   database:
+    build:
+      context: ./mariadb
+      args:
+        mysqld_user: mysql
+        mysqld_group: mysql
     container_name: mariadb
     depends_on: 
       - "webserver"
