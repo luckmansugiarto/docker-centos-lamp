@@ -5,15 +5,24 @@ ARG user
 ARG server_name
 
 # -----------------------------------------------------------------------------
+# Install Epel + Remi Repository via wget
+# -----------------------------------------------------------------------------
+RUN yum -y update && \
+    yum install -y wget && \
+    wget http://dl.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm && \
+    wget http://rpms.famillecollet.com/enterprise/remi-release-6.rpm && \
+    rpm -Uvh epel-release-6-8.noarch.rpm remi-release-6.rpm
+
+# -----------------------------------------------------------------------------
 # Apache + PHP
 # -----------------------------------------------------------------------------
-RUN yum -y update \
-	&& yum --setopt=tsflags=nodocs -y install \
+RUN yum --setopt=tsflags=nodocs -y install \
 	gcc.x86_64 \
 	gcc-c++.x86_64 \
 	httpd.x86_64 \
 	mod_ssl.x86_64 \	
 	php.x86_64 \
+    php-mcrypt \
 	php-mysql.x86_64 \
 	php-cli.x86_64 \
 	php-devel.x86_64 \
@@ -126,7 +135,8 @@ RUN sed -i \
 # -----------------------------------------------------------------------------
 RUN chown -R $user:$user /var/www/$user \
 	&& chmod 770 /var/www/$user \
-	&& chmod -R g+w /var/www/$user/var
+	&& chmod -R g+w /var/www/$user/var \
+    && chmod o+rwx /var/lib/php/session
 
 # -----------------------------------------------------------------------------
 # Remove packages
