@@ -16,6 +16,9 @@ services:
     depends_on:
       - "os"
     image: 509566356991.dkr.ecr.ap-southeast-2.amazonaws.com/php5-3_apache2-2:latest
+    networks:
+      local_network:
+        ipv4_address: 172.18.0.2
     tty: true
     ports:
       - 80:80
@@ -42,8 +45,11 @@ services:
       MYSQL_USER: "mysql"
       MYSQL_PASSWORD: "mysql"
     image: 509566356991.dkr.ecr.ap-southeast-2.amazonaws.com/mariadb_5-5-59:latest
+    networks:
+      local_network:
+        ipv4_address: 172.18.0.3
     ports:
-      - "3306"        
+      - "3306:3306"        
     #restart: always
     tty: true
     volumes:
@@ -58,5 +64,16 @@ services:
       PMA_HOST: "mariadb" # The container name of the database host that this PhpMyAdmin is going to connect to
       PMA_PORT: 3306      # The exposed port of the database container that this PhpMyAdmin needs to connect to
       MYSQL_ROOT_PASSWORD: "my-root-pw"
+    networks:
+      local_network:
+        ipv4_address: 172.18.0.4
     ports:
       - "8080:80" #make sure that container's port is correct (in this case is 80 - as defined by the EXPOSE keyword in the Dockerfile of phpmyadmin), otherwise running localhost:8080 on browser won't show up anything. 
+networks:
+  local_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.1/29
+volumes:
+  mongodb_data:
