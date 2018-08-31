@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  selenium_node_chrome:    
+    container_name: selenium_node_chrome    
+    image: selenium/standalone-chrome-debug
+    networks:
+      local_network:
+        ipv4_address: 172.18.0.5    
+    tty: true
+    ports:
+      - 4444:4444
+      - 5900:5900
+    extra_hosts:
+      - "gigateway.gallagherbassett.local:172.18.0.2"

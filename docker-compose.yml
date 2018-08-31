@@ -74,6 +74,6 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.18.0.1/29
+        - subnet: 172.18.0.1/28
 volumes:
   mongodb_data:

@@ -18,4 +18,12 @@ eg. docker exec <php container name> /bin/sh -c "cd </path/where/shell_script/ex
 
 ## NOTE
 
-if you create your shell script on Windows then make sure that your .sh file has the correct carriage return for that of UNIX. by default, carriage return in files saved via Windows will be saved as \r\n which would cause issues when the .sh file is run on UNIX environment (which docker is based at). In sublime 3, you can change its settings to save file using UNIX encoded carriage return simply by going to View > Line Endings menu and tick the Unix option
+* if you create your shell script on Windows then make sure that your .sh file has the correct carriage return for that of UNIX. by default, carriage return in files saved via Windows will be saved as \r\n which would cause issues when the .sh file is run on UNIX environment (which docker is based at). In sublime 3, you can change its settings to save file using UNIX encoded carriage return simply by going to View > Line Endings menu and tick the Unix option
+
+* Below is the command to run multiple docker-compose file:
+
+    docker-compose -f <docker-compose file 1> -f <docker compose file 2> <command> <option>
+
+    eg.
+    docker-compose -f docker-compose.yml -f docker-compose.tests.yml up -d
+    docker-compose -f docker-compose.yml -f docker-compose.tests.yml down
